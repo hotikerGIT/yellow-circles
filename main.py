@@ -3,22 +3,21 @@ import random
 
 from PyQt6.QtGui import QPainter, QBrush, QColor
 from PyQt6.QtWidgets import QApplication, QMainWindow
-from PyQt6 import uic
 
-class MainWindow(QMainWindow):
+from UI import Ui_MainWindow
+
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-
-        uic.loadUi("UI.ui", self)  # загрузка файла
+        self.setupUi(self)
 
         self.paint_now = False  # контроль рисования
-        self.yellowButton.clicked.connect(self.draw_circle)  # линкуем кнопку с функцией
+        self.circlesButton.clicked.connect(self.draw_circle)  # линкуем кнопку с функцией
 
     def paintEvent(self, event):
         # отключаем рисование до нажатия кнопки
         if self.paint_now:
             painter = QPainter(self)
-            painter.setBrush(QBrush(QColor(255, 255, 0)))
 
             # создаем сколько-то окружностей
             for _ in range(random.randint(5, 50)):
@@ -26,6 +25,10 @@ class MainWindow(QMainWindow):
                 x = random.randint(0, 1200)
                 y = random.randint(0, 800)
                 radius = random.randint(10, 100)
+
+                # генерируем случайный цвет для каждой окружности
+                color = [random.randint(0, 255) for _ in range(3)]
+                painter.setBrush(QBrush(QColor(*color)))
 
                 # рисуем окружность
                 painter.drawEllipse(x, y, radius, radius)
